@@ -1,5 +1,5 @@
 const BASE_URL =
-  "https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies";
+  "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies";
 
 const dropdowns = document.querySelectorAll(".dropdown select");
 const btn = document.querySelector("form button");
@@ -12,9 +12,9 @@ for (let select of dropdowns) {
     let newOption = document.createElement("option");
     newOption.innerText = currCode;
     newOption.value = currCode;
-    if (select.name === "from" && currCode === "USD") {
+    if (select.name === "from" && currCode === "INR") {
       newOption.selected = "selected";
-    } else if (select.name === "to" && currCode === "INR") {
+    } else if (select.name === "to" && currCode === "USD") {
       newOption.selected = "selected";
     }
     select.append(newOption);
@@ -32,11 +32,13 @@ const updateExchangeRate = async () => {
     amtVal = 1;
     amount.value = "1";
   }
-  const URL = `${BASE_URL}/${fromCurr.value.toLowerCase()}/${toCurr.value.toLowerCase()}.json`;
+  let lowercaseFrom = fromCurr.value.toLowerCase();
+  let lowercaseTo = toCurr.value.toLowerCase();
+  const URL = `${BASE_URL}/${lowercaseFrom}.json`;
   let response = await fetch(URL);
   let data = await response.json();
-  let rate = data[toCurr.value.toLowerCase()];
-
+  let rate = data[lowercaseFrom][lowercaseTo];
+  
   let finalAmount = amtVal * rate;
   msg.innerText = `${amtVal} ${fromCurr.value} = ${finalAmount} ${toCurr.value}`;
 };
